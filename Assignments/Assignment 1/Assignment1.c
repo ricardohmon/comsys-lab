@@ -5,11 +5,11 @@
 	Topic: Socket Programming
 
 */
-#include <stdio.h>
+#include <stdio.h> // Required to declare perror() function
 #include <stdlib.h> // Required to declare exit() function
 #include <unistd.h> // Required to declare close() function
 #include <stdint.h>
-#include <string.h>
+#include <string.h> // Required to declare memset(...) function
 #include <sys/time.h>
 
 // Headers required for working with sockets
@@ -27,8 +27,6 @@ typedef struct {
 	uint8_t type;
 	uint8_t len_first_name;
 	uint8_t len_last_name;
-	char *first_name;
-	char *last_name;
 } __attribute__ ((__packed__)) joker_request;
 
 typedef struct {
@@ -59,6 +57,16 @@ int main()
 	socketId = setUpSocket();
 	memset(&jokerResponse, 0, sizeof(joker_response));
     if((sentCount = sendto(socketId, (&jokerRequest), sizeof(joker_request),0,  NULL, 0)) < 0)
+    {
+    	error("ERROR sending");
+    }
+    printf("Characters sent: %d\n", sentCount);
+    if((sentCount = sendto(socketId, firstName, strlen(firstName),0,  NULL, 0)) < 0)
+    {
+    	error("ERROR sending");
+    }
+    printf("Characters sent: %d\n", sentCount);
+    if((sentCount = sendto(socketId, lastName, strlen(lastName),0,  NULL, 0)) < 0)
     {
     	error("ERROR sending");
     }
@@ -118,16 +126,14 @@ void obtainUserInput()
 	printf("You entered: %s:%d\n", ipAddress,portNumber);
 
 	printf("Tell me your first name:\n");
-	scanf("%s", &firstName);
+	scanf("%s", firstName);
 	printf("Tell me your last name:\n");
-	scanf("%s", &lastName);
+	scanf("%s", lastName);
 	printf("You entered: %s %s\n", firstName,lastName);
 
 	jokerRequest.type = JOKER_REQUEST_TYPE;
 	jokerRequest.len_first_name = strlen(firstName);
 	jokerRequest.len_last_name = strlen(lastName);
-	jokerRequest.first_name = firstName;
-	jokerRequest.last_name = lastName;
 
 }
 
