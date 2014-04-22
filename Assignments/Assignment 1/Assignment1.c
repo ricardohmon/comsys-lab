@@ -3,6 +3,7 @@
 	Communication Systems Lab
 	Assignment 1
 	Topic: Socket Programming
+	TCP Client implementation
 
 */
 #include <stdio.h> // Required to declare perror() function
@@ -45,23 +46,25 @@ char *incomingJoke;
 void obtainUserInput();
 int setUpSocket();
 void error(char *msg);
-
+/*
+	Main function which handles the communication with the server.
+*/
 int main()
 {
 	int socketId;
 	int sentCount;
 	int rcvCount;
-	int totalRcvd = 0; // Number of total bytes received
-	int jokeLengthHost = 0;
+	unsigned long totalRcvd = 0; // Number of total bytes received
+	unsigned long jokeLengthHost = 0;
 	obtainUserInput();
 	socketId = setUpSocket();
-	memset(&jokerResponse, 0, sizeof(joker_response));
-    if((sentCount = sendto(socketId, (&jokerRequest), sizeof(joker_request),0,  NULL, 0)) < 0)
+	memset(&jokerResponse, 0, sizeof(joker_response)); // Fill the response's memory space with zeros.
+    if((sentCount = sendto(socketId, (&jokerRequest), sizeof(joker_request),0,  NULL, 0)) < 0) // Send joke request header
     {
     	error("ERROR sending");
     }
     printf("Characters sent: %d\n", sentCount);
-    if((sentCount = sendto(socketId, firstName, strlen(firstName),0,  NULL, 0)) < 0)
+    if((sentCount = sendto(socketId, firstName, strlen(firstName),0,  NULL, 0)) < 0) // Send first name and last name separately
     {
     	error("ERROR sending");
     }
@@ -72,7 +75,7 @@ int main()
     }
     printf("Characters sent: %d\n", sentCount);
     do{
-		if((rcvCount = recv(socketId, ((uint8_t *)&jokerResponse) + totalRcvd, sizeof(joker_response) - totalRcvd, 0)) < 0)
+		if((rcvCount = recv(socketId, ((uint8_t *)&jokerResponse) + totalRcvd, sizeof(joker_response) - totalRcvd, 0)) < 0) // Receive response header
 		{
 			error("ERROR receiving");
 		}
@@ -80,12 +83,12 @@ int main()
 		printf("Bytes received: %d\n",rcvCount);
 	}while(totalRcvd < sizeof(joker_response));
 	totalRcvd = 0;
-	jokeLengthHost = ntohl(jokerResponse.len_joke);
-	printf("Joke length: %u\n", jokeLengthHost);
+	jokeLengthHost = ntohl(jokerResponse.len_joke); // Calculate joke length considering the message representation
+	printf("Joke length: %lu\n", jokeLengthHost);
 	incomingJoke = malloc(jokeLengthHost + 1);
     
     do {
-		if((rcvCount = recv(socketId, incomingJoke + totalRcvd, jokeLengthHost - totalRcvd, 0)) < 0)
+		if((rcvCount = recv(socketId, incomingJoke + totalRcvd, jokeLengthHost - totalRcvd, 0)) < 0) // Receive joke
 		{
 			error("ERROR receiving");
 		}
@@ -93,30 +96,34 @@ int main()
 		totalRcvd += rcvCount;
 	} while(totalRcvd < jokeLengthHost);
 	close(socketId);
-	incomingJoke[jokeLengthHost] = '\0';
+	incomingJoke[jokeLengthHost] = '\0'; // Attach end-of-string character to the joke
 	printf("Message received: \n\n\t%s\n", incomingJoke);
 	free(incomingJoke);
 	return 0;
 }
-
+/*
+	Function used to initialize the socket using IP protocol, TCP method and a destination IP Address/port.
+*/
 int setUpSocket()
 {
 	struct sockaddr_in serv_addr;
 	memset(&serv_addr, 0, sizeof(struct sockaddr_in)); 
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_port = htons(portNumber);
-	inet_aton(ipAddress,(struct in_addr *)&serv_addr.sin_addr);
-	int socketId = socket(PF_INET,SOCK_STREAM,0);
+	serv_addr.sin_family = AF_INET; // Select Internet address family
+	serv_addr.sin_port = htons(portNumber); // Set the port following the network's presentation
+	inet_aton(ipAddress,(struct in_addr *)&serv_addr.sin_addr); // Assign IP Address in the corresponding representation
+	int socketId = socket(PF_INET,SOCK_STREAM,0); // Create TCP socket
 	if (socketId < 0) 
         error("ERROR opening socket");
     struct timeval tv;
 	tv.tv_sec = 3;  /* 3 Secs Timeout */
-    setsockopt(socketId, SOL_SOCKET, SO_RCVTIMEO,(char *)&tv, sizeof(struct timeval));
-	if (connect(socketId,(struct sockaddr *)&serv_addr, sizeof(struct sockaddr_in)) < 0) 
+    setsockopt(socketId, SOL_SOCKET, SO_RCVTIMEO,(char *)&tv, sizeof(struct timeval)); // Assign 3 seconds timeout to socket
+	if (connect(socketId,(struct sockaddr *)&serv_addr, sizeof(struct sockaddr_in)) < 0) // Establish connection using the IP address
         error("ERROR connecting");
     return socketId;
 }
-
+/*
+	Function used to gather information from the user input
+*/
 void obtainUserInput()
 {
 	printf("Specify IP address\n");
