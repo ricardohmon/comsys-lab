@@ -1,0 +1,9 @@
+/* Ausdrucksteuerung für Standard-Tagespläne, Autor: Klaus-D. Stahn, Juli 2010 */
+/* Überlagert die Definition bestimmter Farben in standard.css */
+
+body { font-family: Verdana, Arial, Helvetica, Geneva, SunSans-Regular, sans-serif;
+  margin-left: 20px;  margin-top: 10px; } /* Randabstände links und oben */
+
+.link_box { height: 0px; display: none; } /* Linkbox zum Wochenplan wird beim Druck entfernt */
+#wbox { height: 0px; display: none; } /* Button-Wahlbox wird beim Druck entfernt */
+

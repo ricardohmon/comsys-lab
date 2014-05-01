@@ -1,0 +1,135 @@
+/* Grundsteuerung der Tages- und Wochenansichtspl�ne f�r SW Aachen - alte, blaue HP */
+body { font-family: Verdana, Arial, Helvetica, Geneva, SunSans-Regular, sans-serif; }
+p { margin: 4px 4px 4px 0px; }
+
+/* Nur f�r Kontrolltabelle control.php in Verzeichnis "vorschau" */
+.hitab { font-size:0.6em; max-width:500px; }
+.hitab caption { font-size:110%; text-align: left; line-height:150%; }
+.hitab th { background-color: #e2e2e2; border-bottom:1px solid gray; }
+.hitab td {  }
+
+/* Infozeile: N�hrwertangaben */
+.NwBox { margin:4px 0px -4px 0px; width:100%; border-top:1px dotted #d0d0d0; }
+.NwBox h1 { margin:0px; color:gray; font-size:0.55em; font-weight:normal; }
+.NwBox h2 { float:right; display:block; margin-top:0px; width:300px; text-align:right; font-size:0.55em; }
+
+/* Infozeile: �nderungsvorbehalt und zu ProMeToys */
+.label_box { color:gray; font-weight:normal; margin-top:6px; margin-bottom:2px; border-top:1px solid gray; }
+.label_box h1 { float:left; display:block; margin-top:1px; width:200px; font-size:0.6em;  }
+.label_box h2 { float:right; display:block; margin-top:1px; width:300px; text-align:right; font-size:0.6em; }
+
+/* Logos der Mensen bzw. des Anwenders */
+.logo { float: right; margin-top:2px; width: 51px; height: 44px; margin-right:3px; background: url(../images/logo_oS.gif) no-repeat; }
+.logo_wpln { float: right; width: 85px; height: 54px; background: url(../images/logo_mS.gif) no-repeat; }
+.logo_wpln_gr { margin-left:892px; margin-top: -43px; width: 120px; height: 75px; background: url(../images/logo_mSGr.gif) no-repeat; position:absolute; }
+.LogoGr { float: right; margin-top:6px; width:120px; height:75px; margin-right:3px; background:url(../images/logo_mSGr.gif) no-repeat; }
+
+/* Tagesplan: Infos im Kopfbereich der Seite */
+#all { top:0px; left:0px; height:auto; width:auto; position:absolute; /* border: 1px solid red; */ } /* Box wird in Startseite eingebunden */
+.all { display:block; float:right; font-size:0.6em; font-weight:normal; line-height:100%; color:#2d3d94; padding:0px 3px 2px 3px; background-color: #e5eaf5; }
+#Titel { width:100%; height:auto; background-color:#e5eaf5; }
+.Titel_hs { float:left; text-indent:3px; padding-right:10px; /* background-color:red; */
+  font-size:1.2em; font-weight:bold; color:#2d3d94; text-transform:uppercase; }
+.HSName { padding-top:4px; padding-bottom:1px;
+  font-size:1.0em; font-weight:bold; color:#2d3d94; /* background-color:green; */ }
+.Adr { margin-top:1px; padding-left:3px; background-color:#e5eaf5;
+  font-size:80%; font-weight:normal; color:#2d3d94;}
+.Date { margin-top:5px; padding-left:3px; margin-bottom:5px;
+  font-size:80%; font-weight:bold; color:#2d3d94; /* background-color:yellow; */ }
+.Time { height:auto; padding:3px; background-color:white;
+  font-size:60%; font-weight:normal; color:black; }
+.prs_std { font-size: 0.7em; font-weight: normal; color: #696969; background-color: #f5f7fe; margin-top:5px; margin-bottom:5px; padding: 3px 0px 3px 0px; }
+
+/* Wochenplan: Infos im Kopfbereich der Seite */
+#WoAll { height:auto; width:auto; position:absolute; /* border: 1px solid red; */ } /* Box wird in Startseite eingebunden */
+.WoAll { float:right; height:auto; font-size:0.6em; font-weight:normal; color:#2d3d94; background-color: #e5eaf5; border: 1px solid red; }
+
+#WoCont { margin-top:20px; height:auto; width:auto; position:absolute; /* border: 1px solid red; */ } /* Box wird in Startseite eingebunden */
+.WoCont { display:block; float:right; font-size:0.6em; font-weight:normal; line-height:100%; color:#2d3d94; padding:0px 3px 2px 3px; background-color: #e5eaf5; }
+
+/* Wochenw�hler (Buttonleiste) */
+#wbox { height:20px; width:auto; /* border: 1px solid green; */ }
+.wboxh { float:left; font-size:0.7em; font-weight:normal; color:gray; text-align:center; width:auto; border:1px solid #e5eaf5; margin-left:10px; padding:1px 3px 1px 3px; background-color: white; }
+.wboxh:hover { color: #2d3d94; background-color: #e5eaf5; }
+.wboxm { float:left; font-size:0.7em; font-weight:normal; color:#2d3d94; text-align:center; width:auto; border:1px solid #e5eaf5; margin-left:10px; padding:1px 3px 1px 3px;  background-color: #e5eaf5; }
+.wboxm:hover { color:#696969; background-color: #f5f7fe; }
+
+#WoTitel { width:100%; height:auto; background-color:#e5eaf5; }
+.WoTitel_hs { float:left; text-indent:3px; padding-right:10px; /* background-color:red; */
+  font-size:1.8em; font-weight:bold; color:#2d3d94; text-transform:uppercase; }
+.WoHSName { padding-top:10px; padding-bottom:2px; margin-right:10px; 
+  font-size:1.2em; font-weight:bold; color:#2d3d94; /* background-color:green; */ }
+.WoAdr { background-color:#e5eaf5;
+  font-size:85%; font-weight:normal; color:#2d3d94;}
+.WoDate { margin-top:5px; padding-left:3px; margin-bottom:5px;
+  font-size:85%; font-weight:bold; color:#2d3d94; /* background-color:yellow; */ }
+.WoTime { height:auto; padding:3px; background-color:white;
+  font-size:70%; font-weight:normal; color:black; }
+.WoPrs_std { font-size: 0.8em; font-weight: normal; color: #696969; background-color: #f5f7fe; margin-top:5px; margin-bottom:5px; padding: 3px 0px 3px 0px; }
+
+/* Link zum Wochenplan --------------------------------------------------------------------------------------------------- */
+.link_box { width: auto;}
+.link_box:link { text-decoration: none; font-size:1.0em; font-weight: bold; color: #2d3d94; background-color: #f5f7fe; padding: 0px 4px 2px 4px; } /* h'blau Farbe f�r alte HP */
+.link_box:visited { text-decoration: none; font-size:1.0em; font-weight: bold; color: #2d3d94; background-color: #f5f7fe; padding: 0px 4px 2px 4px; } /* h'blau Farbe f�r alte HP */
+.link_box:hover { font-weight: bold; text-decoration: underline; }
+
+/* Tages-Standardansichten ----------------------------------------------------------------------------------------------- */
+.tag_std { clear: both; border-collapse: collapse; text-align: left; border: 1px solid #e5eaf5; } /* m'blau Farbe f�r alte HP */
+.tag_std caption { padding: 3px; font-size: 0.9em; text-align: left; color:#2d3d94; background-color: #e5eaf5; } /* m'blau Farbe f�r alte HP */
+/* .tag_std tr { border-top: 5px solid white; } /* border: wie wei�er Abstand zwischen den Zeilen */
+.tag_std th { padding: 0px; font-size: 0.8em; font-weight: normal; }
+.tag_std td { padding: 3px; font-size: 0.7em; font-weight: normal; vertical-align: top; } 
+.tag_std h1 { font-size: 85%; font-weight: normal; margin: 0px; } 
+.tag_std h1 { font-size: 0.8em; font-weight: normal; color: gray; margin: 0px; }
+.tag_std h2 { text-align: left; font-size: 80%; font-weight: normal; margin-top:5px; padding: 1px 0px 2px 2px; background-color: #f5f7fe; } /* h'blau Farbe f�r alte HP */
+.tag_std h3 { display:inline; font-size: 90%; font-weight: bold; margin-left:15px; }
+.tag_std h4 { display:inline; font-size: 70%; font-weight: normal; }
+.tag_std h5 { font-size: 100%; font-weight: normal; margin-top:0px; margin-bottom:5px; border-bottom: 1px solid white; }
+.tag_std h6 { display:inline; text-transform:uppercase; font-size: 1.0em; }
+
+/* Wochen-Standardansichten ----------------------------------------------------------------------------------------------- */
+.wo_std { clear: both; border-collapse: collapse; text-align: left; border: 1px solid #e5eaf5; } /* m'blau Farbe f�r alte HP */
+.wo_std caption { padding: 3px; font-size: 1.0em; text-align: left; color:#2d3d94; background-color: #e5eaf5; margin-bottom:3px; } /* m'blau Farbe f�r alte HP */
+.wo_std th { padding: 3px; font-weight: normal; text-align: left; background-color: #d0d7ea; }
+.wo_std td { padding: 3px; font-size: 0.7em; font-weight: normal; vertical-align: top; }
+.wo_std h1 { font-size: 75%; color: gray; font-weight: normal; margin: 0px; } /* N�hrwerte */
+/* .wo_std h1 { font-size: 85%; font-weight: normal; margin: 0px; } */
+/* .wo_std h2 { text-align: left; font-size: 80%; font-weight: normal; margin-top:5px; padding: 1px 0px 2px 2px; background-color: #f5f7fe; } /* h'blau Farbe f�r alte HP */
+.wo_std h3 { display:inline; font-size: 80%; font-weight: normal; }
+.wo_std h4 { display:inline; font-size: 75%; color: gray; font-weight: normal; }
+/* .wo_std h5 { display:inline; font-size: 80%; font-weight: normal; line-height: 150%; } */
+/* .wo_std h6 { display:inline; text-transform:uppercase; font-size: 1.2em; } */
+.erg_td { padding:0px 0px 6px 3px !important; border-left: 2px solid #e5eaf5; }
+.erg_to { padding:0px 0px 6px 3px !important; }
+.erg_tr { border-top: 0px !important; }
+.blank { background-color:rgb(248,248,255); }
+
+/* Erg�nzungen */
+.zusatz_std { font-size: 0.55em; color: gray;  } /* Info der Zusatzstoffe */
+.zusatz_std td { padding: 5px 0px 0px 0px ; } /* Info der Zusatzstoffe */
+.Meldung_std { height: auto; text-align: center; background-color: #e5eaf5; } /* Box f�r Sperrtext */
+.Meldung_std h6 { color: #696969; font-size: 1.0em; line-height: 150%; font-weight: bold; margin: 0px; } /* Text zu Tages- und Wochensperre */
+.Meld_TgStd { font-size:0.8em !important; color: #696969; font-weight: bold !important; text-align: center; vertical-align:middle !important; border-left: 2px solid #e5eaf5; } /* Sperrtext in Tageszeile der Wochentabellen */
+
+.Nw { font-size:75%; color: gray; line-height: 30%; }
+.ws { background-color: white; color:white; } .hbl { background-color: #f5f7fe; color: #f5f7fe; } .sw { color:black;}
+.bgnd_0 { background-color: white; } /* Hintergrundfarbe wei� f�r Tabellenzeilen alte HP */
+.bgnd_1 { background-color: #f5f7fe; } /* Hintergrundfarbe h'blau f�r Tabellenzeilen alte HP */
+.bgnd_2 { background-color: #e5eaf5; } /* Hintergrundfarbe m'blau f�r Tabellenzeilen alte HP */
+.h4 { color:#2d3d94; text-transform:uppercase; }
+.li { text-align: left; }
+.re { text-align: right;  }
+.ball { border:1px solid #d0d7ea; }
+.bto { border-top:1px solid #d0d7ea; }
+.bbo { border-bottom:1px solid #d0d7ea; }
+.btw { border-top:4px solid white;}
+.bre { border-right:1px solid #d0d7ea; }
+.bli { border-left:1px solid #d0d7ea; }
+.bli_0 { border-left:2px solid #e5eaf5; }
+.bli_1 { border-left:2px solid #e5eaf5; }
+.bre_1 { border-right:2px solid #e5eaf5; }
+.abst_o { padding-top:8px !important; }
+.abst_u { padding-bottom:8px !important; }
+
+a:link { color:black; text-decoration:none; } a:visited { color:black; text-decoration:none; } a:hover { color:dimgray; text-decoration:none; } /* Links f�r N�hrwertangaben */
+
