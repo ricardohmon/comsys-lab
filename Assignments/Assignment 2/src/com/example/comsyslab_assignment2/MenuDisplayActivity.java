@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 
 import com.example.comsyslab_assignment2.Model.Cafeterias;
 import com.example.comsyslab_assignment2.Model.MainDishItem;
@@ -18,8 +19,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -30,6 +34,7 @@ public class MenuDisplayActivity extends Activity {
 	TextView dataTextView;
 	int cafeteria;
 	ListView dishesList;
+	Locale chosenLocale;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +46,19 @@ public class MenuDisplayActivity extends Activity {
         
 		if(savedInstanceState != null)
 		{
+			String savedLanguage = "";
 			cafeteria = savedInstanceState.getInt(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_CAFETERIA_KEY,0);
+			savedLanguage = savedInstanceState.getString(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_LANGUAGE_KEY);
+			if(savedLanguage != null)
+			{
+				// Restore previously selected language
+				Resources res = this.getResources();
+			    // Change locale settings in the app.
+			    DisplayMetrics dm = res.getDisplayMetrics();
+			    android.content.res.Configuration conf = res.getConfiguration();
+			    conf.locale = new Locale(savedLanguage);
+			    res.updateConfiguration(conf, dm);	
+			}
 		}
 		else
 		{
@@ -59,8 +76,38 @@ public class MenuDisplayActivity extends Activity {
 	}
 	
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.action_change_language:
+	            changeLanguage();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	private void changeLanguage() {
+		Resources res = this.getResources();
+	    // Change locale settings in the app.
+	    DisplayMetrics dm = res.getDisplayMetrics();
+	    android.content.res.Configuration conf = res.getConfiguration();
+	    if (conf.locale.getLanguage().equalsIgnoreCase(Locale.ENGLISH.toString()))
+	    {
+	    	chosenLocale = Locale.GERMAN;
+	    } else {
+	    	chosenLocale = Locale.ENGLISH;
+	    }
+	    conf.locale = chosenLocale;
+	    Locale.setDefault(conf.locale);
+	    res.updateConfiguration(conf, dm);
+	    new HttpGetTask(this).execute();
+	}
+	
+	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putInt(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_CAFETERIA_KEY, cafeteria);
+		savedInstanceState.putString(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_LANGUAGE_KEY, chosenLocale.toString());
 	}
 	
 	private class HttpGetTask extends AsyncTask<Void, Void, String> {
@@ -153,16 +200,6 @@ public class MenuDisplayActivity extends Activity {
 			}
 			return data.toString();
 		}
-		
-		/*private String parseHtml(String raw){
-			String result = "";
-			
-			com.example.comsyslab_assignment2.Model.Menu menu = new com.example.comsyslab_assignment2.Model.Menu(raw);
-			result = menu.getMainDishes().get(0).getDishName();
-			//result = Integer.toString(doc.select(".bgnd_1.btw").size());
-			//result = doc.select("body").html();
-			return result;
-		}*/
 	}
 
 }
