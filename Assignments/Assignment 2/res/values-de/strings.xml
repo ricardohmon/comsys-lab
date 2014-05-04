@@ -11,8 +11,8 @@
         <item >Mensa Ahorn</item>
     </string-array>
     <string-array name="cafeterias_paths">
-        <item >en/tg_mensa_vita.std.php</item>
-        <item >en/tg_mensa_ahorn.std.php</item>
+        <item >tg_mensa_vita.std.php</item>
+        <item >tg_mensa_ahorn.std.php</item>
     </string-array>
 
 </resources>

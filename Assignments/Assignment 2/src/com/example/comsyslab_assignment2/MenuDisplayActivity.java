@@ -25,10 +25,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MenuDisplayActivity extends Activity {
 	
 	TextView dataTextView;
-	Cafeterias cafeteria;
+	int cafeteria;
 	ListView dishesList;
 	
 	@Override
@@ -41,14 +41,14 @@ public class MainActivity extends Activity {
         
 		if(savedInstanceState != null)
 		{
-			cafeteria = Cafeterias.valueOf(savedInstanceState.getString(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_CAFETERIA_KEY));
-			new HttpGetTask(this).execute();
+			cafeteria = savedInstanceState.getInt(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_CAFETERIA_KEY,0);
 		}
 		else
 		{
-			cafeteria = Cafeterias.VITA_EN;	
+			Bundle extrasBundle = getIntent().getExtras();
+			cafeteria = extrasBundle.getInt(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_CAFETERIA_EXTRA, 0);	
 		}
-		
+		new HttpGetTask(this).execute();
 	}
 
 	@Override
@@ -58,13 +58,9 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	public void onButonShowClick(View sender) {
-		new HttpGetTask(this).execute();
-	}
-	
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_CAFETERIA_KEY, cafeteria.toString());;
+		savedInstanceState.putInt(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_CAFETERIA_KEY, cafeteria);
 	}
 	
 	private class HttpGetTask extends AsyncTask<Void, Void, String> {
@@ -81,18 +77,8 @@ public class MainActivity extends Activity {
 		protected String doInBackground(Void... params) {
 			Socket socket = null;
 			String data = "";
-			
-			switch(cafeteria) {
-				case VITA_EN : 
-					this.requestSite = com.example.comsyslab_assignment2.Model.Constants.VITA_EN_PATH; break;
-				case VITA_DE : 
-					this.requestSite = com.example.comsyslab_assignment2.Model.Constants.VITA_DE_PATH; break;
-				case AHORN_EN : 
-					this.requestSite = com.example.comsyslab_assignment2.Model.Constants.AHORN_EN_PATH; break;
-				case AHORN_DE : 
-					this.requestSite = com.example.comsyslab_assignment2.Model.Constants.AHORN_DE_PATH; break;
-				default : this.requestSite = ""; break;
-			}
+			String[] cafeterias_paths = getResources().getStringArray(R.array.cafeterias_paths);
+			this.requestSite = cafeterias_paths[cafeteria];
 			
 			// Build get request header
 			HTTP_GET_COMMAND = "GET /mensa/"

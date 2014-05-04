@@ -23,4 +23,8 @@ public final class Constants {
 	//public static final String HOST = "speiseplan.studentenwerk-aachen.de";
 	public static final String HOST = "ricardohmon.hostoi.com";
 	
+	/*
+	 * Activity tag
+	 */
+	public static final String CHOSEN_CAFETERIA_EXTRA = "chosen_cafeteria";
 }
