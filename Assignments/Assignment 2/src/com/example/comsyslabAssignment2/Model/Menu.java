@@ -1,4 +1,4 @@
-package com.example.comsyslab_assignment2.Model;
+package com.example.comsyslabAssignment2.Model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,7 +34,7 @@ public class Menu {
 		}
 		catch(Exception e)
 		{
-			Log.e(com.example.comsyslab_assignment2.Model.Constants.HTML_PARSING_TAG, "Error while parsing Menu");
+			Log.e(com.example.comsyslabAssignment2.Model.Constants.HTML_PARSING_TAG, "Error while parsing Menu",e);
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class Menu {
 		}
 		catch(Exception e)
 		{
-			Log.e(com.example.comsyslab_assignment2.Model.Constants.HTML_PARSING_TAG, "Error while parsing Main dishes",e);
+			Log.e(com.example.comsyslabAssignment2.Model.Constants.HTML_PARSING_TAG, "Error while parsing Main dishes",e);
 		}
 	}
 	private void loadSideDishes(org.jsoup.nodes.Element tableElement)
@@ -107,7 +107,7 @@ public class Menu {
 		}
 		catch(Exception e)
 		{
-			Log.e(com.example.comsyslab_assignment2.Model.Constants.HTML_PARSING_TAG, "Error while parsing Side dishes",e);
+			Log.e(com.example.comsyslabAssignment2.Model.Constants.HTML_PARSING_TAG, "Error while parsing Side dishes",e);
 		}
 	}
 }

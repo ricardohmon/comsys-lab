@@ -1,4 +1,6 @@
-package com.example.comsyslab_assignment2;
+package com.example.comsyslabAssignment2;
+
+import com.example.comsyslab_assignment2.R;
 
 import android.os.Bundle;
 import android.app.ListActivity;
@@ -27,7 +29,7 @@ public class MensaSelectionActivity extends ListActivity {
 					int position, long id) {
 				
 				Intent menuDisplayActivityintent = new Intent(MensaSelectionActivity.this,MenuDisplayActivity.class);
-				menuDisplayActivityintent.putExtra(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_CAFETERIA_EXTRA, position);
+				menuDisplayActivityintent.putExtra(com.example.comsyslabAssignment2.Model.Constants.CHOSEN_CAFETERIA_EXTRA, position);
 				MensaSelectionActivity.this.startActivity(menuDisplayActivityintent);
 			}
 		});

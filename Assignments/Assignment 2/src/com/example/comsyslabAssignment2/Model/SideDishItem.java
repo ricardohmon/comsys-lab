@@ -1,4 +1,4 @@
-package com.example.comsyslab_assignment2.Model;
+package com.example.comsyslabAssignment2.Model;
 
 public class SideDishItem extends MenuItem implements Cloneable {
 

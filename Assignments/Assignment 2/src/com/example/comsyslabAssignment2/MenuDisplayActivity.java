@@ -1,19 +1,13 @@
-package com.example.comsyslab_assignment2;
+package com.example.comsyslabAssignment2;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 
-import com.example.comsyslab_assignment2.Model.Cafeterias;
-import com.example.comsyslab_assignment2.Model.MainDishItem;
+import com.example.comsyslabAssignment2.Model.MainDishItem;
+import com.example.comsyslabAssignment2.Native.MensaJNILib;
+import com.example.comsyslab_assignment2.R;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,7 +18,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,6 +29,8 @@ public class MenuDisplayActivity extends Activity {
 	ListView dishesList;
 	Locale chosenLocale;
 	
+
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,8 +42,8 @@ public class MenuDisplayActivity extends Activity {
 		if(savedInstanceState != null)
 		{
 			String savedLanguage = "";
-			cafeteria = savedInstanceState.getInt(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_CAFETERIA_KEY,0);
-			savedLanguage = savedInstanceState.getString(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_LANGUAGE_KEY);
+			cafeteria = savedInstanceState.getInt(com.example.comsyslabAssignment2.Model.Constants.CHOSEN_CAFETERIA_KEY,0);
+			savedLanguage = savedInstanceState.getString(com.example.comsyslabAssignment2.Model.Constants.CHOSEN_LANGUAGE_KEY);
 			if(savedLanguage != null)
 			{
 				// Restore previously selected language
@@ -63,7 +58,7 @@ public class MenuDisplayActivity extends Activity {
 		else
 		{
 			Bundle extrasBundle = getIntent().getExtras();
-			cafeteria = extrasBundle.getInt(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_CAFETERIA_EXTRA, 0);	
+			cafeteria = extrasBundle.getInt(com.example.comsyslabAssignment2.Model.Constants.CHOSEN_CAFETERIA_EXTRA, 0);	
 		}
 		new HttpGetTask(this).execute();
 	}
@@ -106,10 +101,12 @@ public class MenuDisplayActivity extends Activity {
 	
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putInt(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_CAFETERIA_KEY, cafeteria);
-		savedInstanceState.putString(com.example.comsyslab_assignment2.Model.Constants.CHOSEN_LANGUAGE_KEY, chosenLocale.toString());
+		savedInstanceState.putInt(com.example.comsyslabAssignment2.Model.Constants.CHOSEN_CAFETERIA_KEY, cafeteria);
+		savedInstanceState.putString(com.example.comsyslabAssignment2.Model.Constants.CHOSEN_LANGUAGE_KEY, chosenLocale.toString());
 	}
 	
+
+    
 	private class HttpGetTask extends AsyncTask<Void, Void, String> {
 
 		private Context mContext;
@@ -120,10 +117,11 @@ public class MenuDisplayActivity extends Activity {
 	         mContext = context;
 	    }
 	    
+	    
 		@Override
 		protected String doInBackground(Void... params) {
-			Socket socket = null;
 			String data = "";
+			//Log.i(com.example.comsyslabAssignment2.Model.Constants.HTTP_GET_TAG, MensaJNILib.stringFromJNI());
 			String[] cafeterias_paths = getResources().getStringArray(R.array.cafeterias_paths);
 			this.requestSite = cafeterias_paths[cafeteria];
 			
@@ -133,37 +131,18 @@ public class MenuDisplayActivity extends Activity {
 					+ " HTTP/1.1"
 					+ "\n"
 					+ "Host: "
-					+ com.example.comsyslab_assignment2.Model.Constants.HOST
+					+ com.example.comsyslabAssignment2.Model.Constants.HOST
 					+ "\n"
 					+ "Connection: close" + "\n\n";
-			Log.i(com.example.comsyslab_assignment2.Model.Constants.HTTP_GET_TAG, HTTP_GET_COMMAND);
-			try {
-				socket = new Socket(com.example.comsyslab_assignment2.Model.Constants.HOST, 80);
-				PrintWriter pw = new PrintWriter(new OutputStreamWriter(
-						socket.getOutputStream()), true);
-				pw.println(HTTP_GET_COMMAND);
-
-				data = readStream(socket.getInputStream());
-
-			} catch (UnknownHostException exception) {
-				exception.printStackTrace();
-			} catch (IOException exception) {
-				exception.printStackTrace();
-			} finally {
-				if (null != socket)
-					try {
-						socket.close();
-					} catch (IOException e) {
-						Log.e(com.example.comsyslab_assignment2.Model.Constants.HTTP_GET_TAG, "IOException",e);
-					}
-			}
+			Log.i(com.example.comsyslabAssignment2.Model.Constants.HTTP_GET_TAG, HTTP_GET_COMMAND);
+			data = MensaJNILib.handleRequest(com.example.comsyslabAssignment2.Model.Constants.HOST,HTTP_GET_COMMAND);
 			return data;
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
-			
-			com.example.comsyslab_assignment2.Model.Menu menu = new com.example.comsyslab_assignment2.Model.Menu(result);
+			//Log.i(com.example.comsyslabAssignment2.Model.Constants.HTTP_GET_TAG, result);
+			com.example.comsyslabAssignment2.Model.Menu menu = new com.example.comsyslabAssignment2.Model.Menu(result);
 			
 			// Create The Adapter with passing ArrayList as 3rd parameter
 			// TODO: Delete this temporary list
@@ -175,30 +154,6 @@ public class MenuDisplayActivity extends Activity {
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(mContext,android.R.layout.simple_list_item_1, dishes);
             // Set The Adapter
             dishesList.setAdapter(arrayAdapter); 
-			//dataTextView.setText(parseHtml(result));
-		}
-
-		private String readStream(InputStream in) {
-			BufferedReader reader = null;
-			StringBuffer data = new StringBuffer();
-			try {
-				reader = new BufferedReader(new InputStreamReader(in));
-				String line = "";
-				while ((line = reader.readLine()) != null) {
-					data.append(line);
-				}
-			} catch (IOException e) {
-				Log.e(com.example.comsyslab_assignment2.Model.Constants.HTTP_GET_TAG, "IOException",e);
-			} finally {
-				if (reader != null) {
-					try {
-						reader.close();
-					} catch (IOException e) {
-						Log.e(com.example.comsyslab_assignment2.Model.Constants.HTTP_GET_TAG, "IOException",e);
-					}
-				}
-			}
-			return data.toString();
 		}
 	}
 
