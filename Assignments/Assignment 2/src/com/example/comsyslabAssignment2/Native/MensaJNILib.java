@@ -1,5 +1,8 @@
 package com.example.comsyslabAssignment2.Native;
 
+/*
+ * 		Native code's wrapper
+ */
 public class MensaJNILib {
 
     static {

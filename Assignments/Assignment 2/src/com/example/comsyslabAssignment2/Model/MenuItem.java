@@ -1,5 +1,8 @@
 package com.example.comsyslabAssignment2.Model;
 
+/*
+ * 	Abstract Class for Menu Items
+ */
 public abstract class MenuItem implements Cloneable {
 
 	private String _dishName;

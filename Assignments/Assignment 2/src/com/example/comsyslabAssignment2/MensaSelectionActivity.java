@@ -1,3 +1,9 @@
+/*
+ * 		MensaSelectionActivity
+ * 
+ * 		Application's Main activity used to display the available cafeterias and call the second activity.
+ */
+
 package com.example.comsyslabAssignment2;
 
 import com.example.comsyslab_assignment2.R;
@@ -17,13 +23,13 @@ public class MensaSelectionActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		// Call the Cafeterias names resource and use it to populate the list on the activity.
 		setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item,
 				getResources().getStringArray(R.array.cafeterias)));
 
 		ListView lv = getListView();
 		lv.setTextFilterEnabled(true);
-
+		// Create a listener for each of the items, which will create an intent and pass it to the second activity with the number of the cafeteria chosen as an argument.
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {

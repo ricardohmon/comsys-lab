@@ -14,5 +14,7 @@
         <item >en/tg_mensa_vita.std.php</item>
         <item >en/tg_mensa_ahorn.std.php</item>
     </string-array>
+    <string name="maindish_txtHeader">The daily specials:</string>
+    <string name="sidedish_txtHeader">Side dishes</string>
 
 </resources>

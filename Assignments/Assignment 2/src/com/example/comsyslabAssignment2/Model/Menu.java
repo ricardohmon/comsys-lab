@@ -9,10 +9,16 @@ import org.jsoup.select.Elements;
 
 import android.util.Log;
 
+/*
+ *  Menu's data structure which stores the information obtained from the Cafeteria's site
+ */
 public class Menu {
 	private ArrayList<MainDishItem> _mainDishes;
 	private ArrayList<SideDishItem> _sideDishes;
 	
+	/*
+	 * 	The data structure's constructor receives the raw HTML and parses it using a third-party library
+	 */
 	public Menu(String rawHTML) 
 	{
 		_mainDishes = new ArrayList<MainDishItem>();
@@ -21,6 +27,7 @@ public class Menu {
 			Document doc = Jsoup.parse(rawHTML);
 			if(doc != null && doc.hasText())
 			{
+				// Table elements are extracted to distinguish between Main dishes and side dishes
 				Elements tables = doc.select("table");
 				if(tables.size() > 0)
 				{
@@ -50,6 +57,7 @@ public class Menu {
 	private void loadMainDishes(org.jsoup.nodes.Element tableElement)
 	{
 		try {
+			// Iterate through each row to each extract each dish's information, such as name, description, price and nutritional value.
 			for(Iterator<org.jsoup.nodes.Element> elem_it = tableElement.select("tr").iterator(); elem_it.hasNext();)
 			{
 				String dishName = "";
@@ -83,6 +91,7 @@ public class Menu {
 	private void loadSideDishes(org.jsoup.nodes.Element tableElement)
 	{
 		try {
+			// Iterate through each row to each extract each dish's information, such as name, description and nutritional value.
 			for(Iterator<org.jsoup.nodes.Element> elem_it = tableElement.select("tr").iterator(); elem_it.hasNext();)
 			{
 				String dishName = "";

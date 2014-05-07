@@ -14,5 +14,6 @@
         <item >tg_mensa_vita.std.php</item>
         <item >tg_mensa_ahorn.std.php</item>
     </string-array>
-
+	<string name="maindish_txtHeader">Spezialitäten des Tages:</string>
+    <string name="sidedish_txtHeader">Beilagen</string>
 </resources>

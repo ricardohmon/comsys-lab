@@ -16,11 +16,15 @@ public final class Constants {
 	
 	public static final String MENU_DISPLAY_TAG = "MenuDisplay";
 	
+	public static final String MAIN_DISH_ADAPTER_TAG = "MainDishAdapter";
+	
+	public static final String SIDE_DISH_ADAPTER_TAG = "SideDishAdapter";
+	
 	/*
 	 * Cafeterias URLs
 	 */
-	//public static final String HOST = "speiseplan.studentenwerk-aachen.de";
-	public static final String HOST = "ricardohmon.hostoi.com";
+	public static final String HOST = "speiseplan.studentenwerk-aachen.de";
+	//public static final String HOST = "ricardohmon.hostoi.com";
 	
 	/*
 	 * Activity tag
