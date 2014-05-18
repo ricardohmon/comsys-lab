@@ -4,6 +4,8 @@ import com.example.comsyslab_assignment3.constants.Constants;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -17,11 +19,12 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private final float SENSOR_MAX_VALUE = 9.81f; // Max value in the graph
 	private final float SAMPLE_NUM = 50; // Number of samples to be shown in the graph before reseting it.
-	private final int colors[] = {Color.GREEN, Color.BLUE, Color.RED}; 
+	private final int colors[] = {Color.GREEN, Color.MAGENTA, Color.RED}; 
 	private final Context mContext; // Activity's context
 	private final DisplayMetrics  mDisplay;
 	private final SurfaceHolder mSurfaceHolder;
 	private final Paint mPainter = new Paint();
+	private Bitmap mBackgroundBMP;
 	private Thread mDrawingThread;
 	private int sampleCount;
 	private Path paths[] = new Path[3];
@@ -36,18 +39,14 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 		mContext = context;
 		mDisplay = new DisplayMetrics();
 		((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(mDisplay);
+		mBackgroundBMP = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.grid);
 		// Assign styling parameters to the Paint object
 		mPainter.setAntiAlias(true);
 		mPainter.setStyle(Paint.Style.STROKE);
-		mPainter.setStrokeWidth(3);
+		mPainter.setStrokeWidth(8);
 		mSurfaceHolder = getHolder();
 		mSurfaceHolder.addCallback(this); // Let the surface holder know this class will draw on the surface
 		sampleCount = 0;
-		// Initialize all paths that will contain the values received from the sensor.
-		for(int i=0; i<paths.length;i++)
-		{
-			paths[i] = new Path();
-		}
 	}
 	/*
 	 * 		Add new set of values incoming from the sensor to the corresponding path. If the number of samples was reached, reset the graph.
@@ -78,7 +77,8 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 	// First erase the canvas with a white background and then draw the paths.
 	private void drawGraph(Canvas canvas) {
 		
-		canvas.drawColor(Color.WHITE);
+		canvas.drawColor(mContext.getResources().getColor(R.color.graph_background_color));
+		canvas.drawBitmap(mBackgroundBMP, 0, 0, mPainter);
 		for(int i=0; i< paths.length;i++)
 		{
 			mPainter.setColor(colors[i]);
@@ -86,7 +86,6 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 		
 	}
-	
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
 		// TODO Auto-generated method stub
@@ -102,6 +101,14 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 		mYOrigin = this.getHeight() / 2f;
 		mXspacing = this.getWidth() / SAMPLE_NUM;
 		mYspacing = mYOrigin / SENSOR_MAX_VALUE;
+		mBackgroundBMP = Bitmap.createScaledBitmap(mBackgroundBMP, this.getWidth(), this.getHeight(), true);
+
+		// Initialize all paths that will contain the values received from the sensor.
+		for(int i=0; i<paths.length;i++)
+		{
+			paths[i] = new Path();
+			paths[i].moveTo(0f, mYOrigin);
+		}
 		
 		mDrawingThread = new Thread(new Runnable() {
 			@Override

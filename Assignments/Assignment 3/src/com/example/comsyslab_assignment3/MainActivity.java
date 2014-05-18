@@ -9,17 +9,25 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	private SensorController<Accelerometer> accelerometerController;
-	private RelativeLayout mainView;
+	private LinearLayout mainView;
+	private TextView xView;
+	private TextView yView;
+	private TextView zView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		mainView = (RelativeLayout) findViewById(R.id.frame); // Get a reference to the main layout
+		mainView = (LinearLayout) findViewById(R.id.mainLayout); // Get a reference to the main layout
+		xView = (TextView) findViewById(R.id.xValue);
+		yView = (TextView) findViewById(R.id.yValue);
+		zView = (TextView) findViewById(R.id.zValue);
 		
 		final GraphView sensorGraphVw = new GraphView(this); // Create an instance of the custom view
 		mainView.addView(sensorGraphVw);					// add it to the layout
@@ -31,6 +39,9 @@ public class MainActivity extends Activity {
 			public void onNewData(float[] values)
 			{
 				sensorGraphVw.addNewValues(values); // Add the new value to the graph
+				xView.setText(String.format("%.3f", values[0]));
+				yView.setText(String.format("%.3f", values[1]));
+				zView.setText(String.format("%.3f", values[2]));
 			}
 		});
 		Log.i(Constants.MainActivityTag, "Launching thread...");
