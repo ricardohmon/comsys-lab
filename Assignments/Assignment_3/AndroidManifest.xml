@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.comsyslab_assignment3"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="16" />
+	<uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" >
+    </uses-permission>
+    
+    <application
+        android:allowBackup="true"
+        android:debuggable="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        
+        <activity
+            android:name="com.example.comsyslabAssignment3.ModeSelectionActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.comsyslabAssignment3.ServerMainActivity"
+            android:label="@string/title_activity_server_main"
+            android:parentActivityName="com.example.comsyslabAssignment3.ModeSelectionActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.comsyslab_assignment3.ModeSelectionActivity" />
+        </activity>
+        <activity
+            android:name="com.example.comsyslabAssignment3.ServerInfoActivity"
+            android:label="@string/title_activity_server_info"
+            android:parentActivityName="com.example.comsyslabAssignment3.ModeSelectionActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.comsyslab_assignment3.ModeSelectionActivity" />
+        </activity>
+        <activity
+            android:name="com.example.comsyslabAssignment3.ClientMainActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.example.comsyslabAssignment3.ServerInfoActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.comsyslab_assignment3.ServerInfoActivity" />
+        </activity>
+    </application>
+
+</manifest>

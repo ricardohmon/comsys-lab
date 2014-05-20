@@ -1,4 +1,4 @@
-package com.example.comsyslab_assignment3.model;
+package com.example.comsyslabAssignment3.model;
 
 public abstract class Sensor {
 	private static int _type;

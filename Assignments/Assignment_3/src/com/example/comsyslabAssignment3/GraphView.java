@@ -1,6 +1,7 @@
-package com.example.comsyslab_assignment3;
+package com.example.comsyslabAssignment3;
 
-import com.example.comsyslab_assignment3.constants.Constants;
+import com.example.comsyslabAssignment3.constants.Constants;
+import com.example.comsyslab_assignment3.R;
 
 import android.app.Activity;
 import android.content.Context;
