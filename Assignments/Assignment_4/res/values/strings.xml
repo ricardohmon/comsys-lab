@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ComsysLab_Assignment4</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    <string name="title_activity_server_info">ServerInfoActivity</string>
+    <string name="ipaddresslbl">Server\'s IP Address:</string>
+    <string name="portlbl">Server\'s Port number:</string>
+    <string name="ipaddresshint">0.0.0.0</string>
+    <string name="porthint">e.g. 12345</string>
+
+</resources>
