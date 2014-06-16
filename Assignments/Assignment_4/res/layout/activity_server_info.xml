@@ -23,7 +23,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/ipaddresslbl"
         android:hint="@string/ipaddresshint"
-        android:text="192.168.43.1" />
+        android:text="137.226.109.219" />
 
     <TextView
         android:id="@+id/portlbl"

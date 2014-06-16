@@ -1,0 +1,5 @@
+-- Plug configuration file
+-- PLUG ID NAME CODE
+PLUG 1 Kitchen 0x0184 -- 0110000100
+PLUG 2 Bedroom 0x0184 -- 0110000100
+PLUG 3 Bathroom 0x0184 -- 0110000100

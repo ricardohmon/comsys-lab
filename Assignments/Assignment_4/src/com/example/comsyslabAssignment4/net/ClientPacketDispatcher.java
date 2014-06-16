@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
@@ -14,9 +15,14 @@ import com.example.comsyslabAssignment4.model.PlugInfo;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
+import android.app.Activity;
 
 
 public class ClientPacketDispatcher implements Runnable {
+	private Object mPauseLock;
+    private boolean mPaused;
+    private boolean mFinished;
 	private Context context;
 	private String serverIpAddress;
 	private short serverPort;
@@ -28,6 +34,9 @@ public class ClientPacketDispatcher implements Runnable {
 	private OnPlugListReceivedListener mPlugListReceivedListener;
 	
 	public ClientPacketDispatcher(Context context, String serverIpAddress, short localPort, String serverPort) {
+		this.mPauseLock = new Object();
+        this.mPaused = false;
+        this.mFinished = false;
 		this.context = context;
 		this.localPort = localPort;
 		this.serverIpAddress = serverIpAddress;
@@ -44,6 +53,10 @@ public class ClientPacketDispatcher implements Runnable {
 		} catch (SocketException e) {
 			Log.e(Constants.ClientPacketDispatcherTag, "Error while trying to create socket.", e);
 		}
+	}
+	
+	public void closeSocket() {
+		socket.close();
 	}
 	
 	/*
@@ -63,40 +76,63 @@ public class ClientPacketDispatcher implements Runnable {
 	
 	public void requestPlugList()
 	{
+		Log.d(Constants.ClientPacketDispatcherTag, "Requesting Plug list");
 		this.sendPacket(Constants.TYPE_DISCOVER,0);
 	}
 	
 	public void turnOff(int plugId)
 	{
+		Log.d(Constants.ClientPacketDispatcherTag, "Turning light off");
 		this.sendPacket(Constants.TYPE_SWITCH_OFF,plugId);
 	}
 	
 	public void turnOn(int plugId)
 	{
+		Log.d(Constants.ClientPacketDispatcherTag, "Turning light on");
 		this.sendPacket(Constants.TYPE_SWITCH_ON,plugId);
 	}
 	
+	public void resume() {
+		this.notify();
+	}
 	@Override
 	public void run() {
 		byte[] buf = new byte[256];
 		DatagramPacket packet = new DatagramPacket(buf,buf.length);
-		
-		while(!Thread.currentThread().isInterrupted())
-		{
+		while (!mFinished) {
+			
+			synchronized (mPauseLock) {
+                while (mPaused) {
+                    try {
+                        mPauseLock.wait();
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+			
 			try {
 				this.socket.receive(packet);
+				//decodePacket(packet.getData());
+				((Activity)this.context).runOnUiThread(new showOnUIThread(String.format("Plugs received: %d", decodePacket(packet.getData()))));
+			} 
+			catch(SocketTimeoutException e) {
+				((Activity)this.context).runOnUiThread(new showOnUIThread("Reception timedout."));
+				try {
 				if(this.newPacket)
 				{
 					Log.i(Constants.ClientPacketDispatcherTag, "New packet available to send.");
 					this.socket.send(sendPacket);
 					this.newPacket = false;
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+				}catch (IOException se) {
+					se.printStackTrace();
+					
+				}
 			}
-
-			decodePacket(packet.getData());
-			//((Activity)this.context).runOnUiThread(new showOnUIThread(buf));
+			catch (IOException e) {
+				e.printStackTrace();
+				
+			}
 		}
 	}
 	private void sendPacket(int type, int plugId)
@@ -135,7 +171,7 @@ public class ClientPacketDispatcher implements Runnable {
 		 packet = new DatagramPacket(buffarray,buffarray.length,this.serverAddress,(int)this.serverPort);
 		 return packet;
 	}
-	
+/*	
 	private void decodePacket(byte[] data)
 	{
 		if(data.length > 0 && data[0] == Constants.TYPE_PLUG_LIST) {
@@ -151,21 +187,61 @@ public class ClientPacketDispatcher implements Runnable {
 			}
 		}
 	}
-	/*
+	*/
+	private int decodePacket(byte[] data)
+	{
+		int totalPlugs = 0;
+		if(data.length > 0 && data[0] == Constants.TYPE_PLUG_LIST) {
+			totalPlugs = data[1];
+			int idx = 2;
+			for(int plugCount = 0; plugCount < totalPlugs; plugCount++)
+			{
+				final int plugId = data[idx++];
+				final Status status = data[idx++] == Constants.TYPE_STATUS_ON ? Status.ON : Status.OFF;
+				int length = data[idx];
+				final String name = new String(data, idx + 1, length);
+				idx += data[idx] + 1;
+				((Activity)this.context).runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						ClientPacketDispatcher.this.mPlugListReceivedListener.onPlugListReceived(new PlugInfo(plugId,status,name));						
+					}
+					
+				});
+			}
+		}
+		return totalPlugs;
+	}
+	
 	class showOnUIThread implements Runnable {
-        private byte[] data;
-        public showOnUIThread(byte[] data) {
+        private String data;
+        public showOnUIThread(String data) {
             this.data = data;
         }
         @Override
         public void run() {
-        	if(data.length > 0 && data[0] == Constants.TYPE_SHAKE) {
-    			String name = ByteBuffer.wrap(data, 10, data[9]).toString();
-    			String date = DateFormat.getInstance().format((new Date((long)ByteBuffer.wrap(data,1,8).getLong() * 1000)));
-    			Toast.makeText(ClientPacketDispatcher.this.context, String.format("Shake detected by %s at %s", name,date), Toast.LENGTH_SHORT).show();
-    		}
+        	Toast.makeText(ClientPacketDispatcher.this.context, this.data, Toast.LENGTH_SHORT).show();
         }
     }
-    */
+    
+	/**
+     * Call this on pause.
+     */
+    public void onPause() {
+        synchronized (mPauseLock) {
+            mPaused = true;
+        }
+    }
+
+    /**
+     * Call this on resume.
+     */
+    public void onResume() {
+        synchronized (mPauseLock) {
+            mPaused = false;
+            mPauseLock.notifyAll();
+        }
+    }
 	
 }
